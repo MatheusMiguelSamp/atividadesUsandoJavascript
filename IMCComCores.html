@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de IMC</title>
+    <link rel="stylesheet" href="IMCComCores.css">
+</head>
+
+<body>
+    <h1>Calculadora de IMC</h1><br>
+    <label>Se for homem, deixe a checkbox vazia</label>
+    <input type="checkbox" id="genero"><br><br>
+
+    <label>Informe sua altura</label><br>
+    <input type="number" placeholder="Ex.: 161" id="altura">
+    <label>Cm</label>
+    <br><br>
+
+    <label>Informe o seu peso</label><br>
+    <input type="number" placeholder="Ex.: 70" id="peso">
+    <label>Kg</label><br><br>
+
+    <button onclick="pesquisador()">Clique aqui quando finalizar</button>
+    <br><br>
+    <p id="resultado"></p>
+
+    <script>
+        function pesquisador() {
+            var inputPeso = document.getElementById('peso')
+            var inputAltura = document.getElementById('altura')
+            if (inputPeso.value === '') {
+                alert('O peso precisa ser informado corretamente')
+                document.getElementById('peso').focus();
+                return
+            }
+            if (inputAltura.value === '') {
+                alert('A altura precisa ser informada corretamente')
+                document.getElementById('altura').focus()
+                return
+            }
+            var alturaDigitada = parseFloat(inputAltura.value)
+            var pesoDigitado = parseFloat(inputPeso.value)
+            var alturaMetros = alturaDigitada / 100
+            var imc = pesoDigitado / (alturaMetros * alturaMetros)
+            var classificacao = '', classe = ''
+
+            if (imc < 18.5) {
+                classificacao = "Abaixo do peso"
+                classe = 'verde';
+            } else if (imc < 24.9) {
+                classificacao = "Peso normal"
+                classe = 'amareloEsverdeado'
+            } else if (imc < 29.9) {
+                classificacao = "Sobrepeso"
+                classe = 'amarelo'
+            } else if (imc < 34.9) {
+                classificacao = "Obesidade de grau I"
+                classe = 'laranja'
+            } else if (imc < 39.9) {
+                classificacao = "Obesidade de grau II"
+                classe = 'laranjaAvermelhado'
+            } else {
+                classificacao = "Obesidade de grau III"
+                classe = 'vermelho'
+            }
+
+            var resultadoElemento = document.getElementById('resultado')
+
+            resultadoElemento.className = ''
+
+            resultadoElemento.textContent = 'Seu IMC é de ' + imc.toFixed(2) + ' - ' + classificacao
+            //resultadoElemento.classList.add(classe)
+            resultadoElemento.setAttribute('class', classe)
+        }
+    </script>
+</body>
+
+</html>
