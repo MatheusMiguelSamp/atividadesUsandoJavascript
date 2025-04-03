@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .form-container {
             max-width: 320px;
@@ -19,7 +19,7 @@
 <body class="d-flex justify-content-center align-items-center">
     <div class="form-container">
         <h2 class="mb-3 text-center">Cadastro</h2>
-        <form>
+        <form id="cadastroForm">
             <div class="mb-2">
                 <label for="nome" class="form-label">Nome</label>
                 <input type="text" class="form-control" placeholder="Maria" id="nome">
@@ -34,7 +34,7 @@
             </div>
             <div class="mb-2">
                 <label for="cep" class="form-label">CEP</label>
-                <input type="text" class="form-control" placeholder="12345678" id="cep" maxlength="8" onblur="loadLogradouro()">
+                <input type="text" class="form-control" placeholder="12345678" id="cep" maxlength="8" onblur="pesquisaCEP(this.value)">
             </div>
             <div class="mb-2">
                 <label for="rua" class="form-label">Rua</label>
@@ -55,5 +55,67 @@
             <button type="button" class="btn btn-primary w-100" onclick="validarFormulario()">Enviar</button>
         </form>
     </div>
+
+    <script>
+        function pesquisaCEP(valor) {
+            var cep = valor.replace(/\D/g, '')
+
+            if (cep !== "") {
+                var validacep = /^[0-9]{8}$/
+
+                if (validacep.test(cep)) {
+                    document.getElementById('rua').value = "..."
+                    document.getElementById('bairro').value = "..."
+                    document.getElementById('cidade').value = "..."
+                    document.getElementById('uf').value = "..."
+
+                    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (!data.erro) {
+                                document.getElementById('rua').value = data.logradouro
+                                document.getElementById('bairro').value = data.bairro
+                                document.getElementById('cidade').value = data.localidade
+                                document.getElementById('uf').value = data.uf
+                            } else {
+                                limpaFormularioCep()
+                                alert("CEP não encontrado.")
+                            }
+                        })
+                        .catch(error => {
+                            limpaFormularioCep()
+                            alert("Erro ao consultar o CEP.")
+                        })
+
+                } else {
+                    limpaFormularioCep()
+                    alert("Formato de CEP inválido.")
+                }
+            } else {
+                limpaFormularioCep()
+            }
+        }
+
+        function validarFormulario() {
+    const campos = ["nome", "email", "telefone", "cep", "rua", "bairro", "uf", "cidade"];
+    let valido = true;
+    const params = new URLSearchParams();
+
+    for (let campo of campos) {
+        let valor = document.getElementById(campo).value.trim();
+        if (valor === "") {
+            valido = false;
+            break;
+        }
+        params.append(campo, valor);
+    }
+
+    if (valido) {
+        window.location.href = "verCadastros.html?" + params.toString();
+    } else {
+        alert("Por favor, preencha todos os campos antes de enviar.");
+    }
+}
+    </script>
 </body>
 </html>
