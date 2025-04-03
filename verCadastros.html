@@ -7,35 +7,54 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin-top: 40px;
+        }
+        .table-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            overflow-x: auto;
+        }
+        .btn-group-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            align-items: center;
+        }
+        body {
+            overflow-x: hidden;
         }
     </style>
 </head>
-<body class="d-flex justify-content-center align-items-center">
-    <div class="container">
-        <h2 class="mb-3 text-center">Lista de Cadastros</h2>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Email</th>
-                    <th>Telefone</th>
-                    <th>CEP</th>
-                    <th>Rua</th>
-                    <th>Bairro</th>
-                    <th>Cidade</th>
-                    <th>UF</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody id="tabela-cadastros"></tbody>
-        </table>
+<body class="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <a href="cadastroHome.html">voltar</a>
+    <div class="container table-container">
+        <h2 class="mb-4 text-center">Lista de Cadastros</h2>
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                        <th>CEP</th>
+                        <th>Rua</th>
+                        <th>Bairro</th>
+                        <th>Cidade</th>
+                        <th>UF</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-cadastros"></tbody>
+            </table>
+        </div>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Captura os parâmetros da URL
             const params = new URLSearchParams(window.location.search);
             const novoCadastro = {
                 nome: params.get("nome"),
@@ -48,14 +67,12 @@
                 uf: params.get("uf")
             };
 
-            // Verifica se todos os campos estão preenchidos antes de salvar
             if (novoCadastro.nome && novoCadastro.email) {
                 let cadastros = JSON.parse(localStorage.getItem("cadastros")) || [];
                 cadastros.push(novoCadastro);
                 localStorage.setItem("cadastros", JSON.stringify(cadastros));
             }
 
-            // Função para atualizar a tabela
             function carregarCadastros() {
                 const tabela = document.getElementById("tabela-cadastros");
                 tabela.innerHTML = "";
@@ -73,14 +90,15 @@
                         <td>${cadastro.cidade}</td>
                         <td>${cadastro.uf}</td>
                         <td>
-                            <button class="btn btn-warning btn-sm" onclick="editarCadastro(${index})">Editar</button>
-                            <button class="btn btn-danger btn-sm" onclick="excluirCadastro(${index})">Excluir</button>
+                            <div class="btn-group-vertical">
+                                <button class="btn btn-warning btn-sm" onclick="editarCadastro(${index})">Editar</button>
+                                <button class="btn btn-danger btn-sm" onclick="excluirCadastro(${index})">Excluir</button>
+                            </div>
                         </td>
                     `;
                 });
             }
 
-            // Função para editar um cadastro
             window.editarCadastro = function(index) {
                 let cadastros = JSON.parse(localStorage.getItem("cadastros"));
                 let cadastro = cadastros[index];
@@ -95,7 +113,6 @@
                 }
             };
 
-            // Função para excluir um cadastro
             window.excluirCadastro = function(index) {
                 if (confirm("Tem certeza que deseja excluir este cadastro?")) {
                     let cadastros = JSON.parse(localStorage.getItem("cadastros"));
@@ -105,7 +122,6 @@
                 }
             };
 
-            // Carregar cadastros ao entrar na página
             carregarCadastros();
         });
     </script>
