@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
             max-width: 1000px;
             margin-top: 40px;
         }
+
         .table-container {
             background: #fff;
             padding: 20px;
@@ -18,43 +20,47 @@
             width: 100%;
             overflow-x: auto;
         }
+
         .btn-group-vertical {
             display: flex;
             flex-direction: column;
             gap: 5px;
             align-items: center;
         }
+
         body {
             overflow-x: hidden;
         }
     </style>
 </head>
-<body class="d-flex justify-content-center align-items-center vh-100 bg-light">
-    <a href="cadastroHome.html">voltar</a>
-    <div class="container table-container">
-        <h2 class="mb-4 text-center">Lista de Cadastros</h2>
-        <div class="table-responsive">
-            <table class="table table-hover table-bordered text-center">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Nome</th>
-                        <th>Email</th>
-                        <th>Telefone</th>
-                        <th>CEP</th>
-                        <th>Rua</th>
-                        <th>Bairro</th>
-                        <th>Cidade</th>
-                        <th>UF</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="tabela-cadastros"></tbody>
-            </table>
+
+<body>
+    <a href="cadastroHome.html" class="btn btn-secondary">voltar</a>
+    <div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+        <div class="container table-container">
+            <h2 class="mb-4 text-center">Lista de Cadastros</h2>
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Telefone</th>
+                            <th>CEP</th>
+                            <th>Rua</th>
+                            <th>Bairro</th>
+                            <th>Cidade</th>
+                            <th>UF</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-cadastros"></tbody>
+                </table>
+            </div>
         </div>
     </div>
-
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const params = new URLSearchParams(window.location.search);
             const novoCadastro = {
                 nome: params.get("nome"),
@@ -99,12 +105,12 @@
                 });
             }
 
-            window.editarCadastro = function(index) {
+            window.editarCadastro = function (index) {
                 let cadastros = JSON.parse(localStorage.getItem("cadastros"));
                 let cadastro = cadastros[index];
                 let novoNome = prompt("Novo nome:", cadastro.nome);
                 let novoEmail = prompt("Novo email:", cadastro.email);
-                
+
                 if (novoNome && novoEmail) {
                     cadastros[index].nome = novoNome;
                     cadastros[index].email = novoEmail;
@@ -113,7 +119,7 @@
                 }
             };
 
-            window.excluirCadastro = function(index) {
+            window.excluirCadastro = function (index) {
                 if (confirm("Tem certeza que deseja excluir este cadastro?")) {
                     let cadastros = JSON.parse(localStorage.getItem("cadastros"));
                     cadastros.splice(index, 1);
@@ -126,4 +132,5 @@
         });
     </script>
 </body>
+
 </html>
